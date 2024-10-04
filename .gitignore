@@ -33,3 +33,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Other ###
+module-dev-8/src/main/resources/config/.env
+module-dev-8/src/main/resources/config/docker-compose.yml
