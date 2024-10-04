@@ -1,16 +1,18 @@
-package ua.maestr0.second.dto;
+package ua.maestr0.crud.dto;
 
-import ua.maestr0.second.anotation.Column;
-import ua.maestr0.second.anotation.Id;
-import ua.maestr0.second.config.DataSource;
-import ua.maestr0.second.util.SqlGenerator;
+import ua.maestr0.crud.anotation.Column;
+import ua.maestr0.crud.anotation.Id;
+import ua.maestr0.crud.config.DataSource;
+import ua.maestr0.crud.util.SqlGenerator;
 
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.*;
 
+import static ua.maestr0.crud.util.Validator.validateEntity;
+
 public class ServiceDto {
-    private SqlGenerator sqlGenerator = new SqlGenerator();
+    private final SqlGenerator sqlGenerator = new SqlGenerator();
 
     private <T> T mapResultSetToObject(ResultSet resultSet, Class<T> type) {
         T emptyObject = null;
@@ -98,8 +100,9 @@ public class ServiceDto {
         }
     }
 
-    public <T> boolean create(T entity, Class<T> type) {
-        String query = sqlGenerator.generateCreateQuery(type);
+    public <T> boolean create(T entity) {
+        validateEntity(entity);
+        String query = sqlGenerator.generateCreateQuery(entity.getClass());
 
         try (Connection connection = DataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -109,7 +112,7 @@ public class ServiceDto {
                 Field field = declaredFields[i - 1];
                 field.setAccessible(true);
                 if(field.isAnnotationPresent(Id.class)) {
-                    field.set(entity, getNextId(type));
+                    field.set(entity, getNextId(entity.getClass()));
                 }
                 Object value = field.get(entity);
                 preparedStatement.setObject(i, value);
@@ -133,8 +136,7 @@ public class ServiceDto {
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             int paramIndex = 1;
 
-            for (Iterator<String> iterator = fieldsToUpdate.keySet().iterator(); iterator.hasNext(); ) {
-                String fieldName = iterator.next();
+            for (String fieldName : fieldsToUpdate.keySet()) {
                 Field field = type.getDeclaredField(fieldName);
                 field.setAccessible(true);
                 Object value = fieldsToUpdate.get(fieldName);

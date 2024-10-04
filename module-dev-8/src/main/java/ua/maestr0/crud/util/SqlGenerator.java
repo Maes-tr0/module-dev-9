@@ -1,8 +1,8 @@
-package ua.maestr0.second.util;
+package ua.maestr0.crud.util;
 
-import ua.maestr0.second.anotation.Column;
-import ua.maestr0.second.anotation.Id;
-import ua.maestr0.second.anotation.Table;
+import ua.maestr0.crud.anotation.Column;
+import ua.maestr0.crud.anotation.Id;
+import ua.maestr0.crud.anotation.Table;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -22,7 +22,6 @@ public class SqlGenerator {
     private static final String UPDATE_IN_TABLE_BY_ID = "UPDATE %s SET %s WHERE %s = ?";
 
     private static final String GET_LAST_ID_FROM_TABLE = "SELECT nextval('%s_id_seq')";
-
 
 
     private String resolveTableName(Class<?> type) {

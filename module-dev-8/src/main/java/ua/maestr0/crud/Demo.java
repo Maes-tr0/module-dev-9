@@ -1,9 +1,9 @@
-package ua.maestr0.second;
+package ua.maestr0.crud;
 
-import ua.maestr0.second.dto.ServiceDto;
-import ua.maestr0.second.model.Customer;
-import ua.maestr0.second.model.Order;
-import ua.maestr0.second.model.Product;
+import ua.maestr0.crud.dto.ServiceDto;
+import ua.maestr0.crud.model.Customer;
+import ua.maestr0.crud.model.Order;
+import ua.maestr0.crud.model.Product;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ public class Demo {
     public static void main(String[] args) {
         ServiceDto serviceDto = new ServiceDto();
 
-        customerServiceDTOTest(serviceDto);
+        //customerServiceDTOTest(serviceDto);
         //orderServiceDTOTest(serviceDto);
         //productServiceDTOTest(serviceDto);
     }
@@ -27,7 +27,7 @@ public class Demo {
                 "Fast wireless charging pad",
                 BigDecimal.valueOf(29.99),
                 120);
-        boolean isCreated = serviceDto.create(newProduct, Product.class);
+        boolean isCreated = serviceDto.create(newProduct);
         System.out.println("Product created: " + isCreated);
 
         // 2. Пошук продукту за ID
@@ -61,7 +61,7 @@ public class Demo {
                 LocalDateTime.now(),
                 BigDecimal.valueOf(899.99),
                 "In Progress");
-        boolean isCreated = serviceDto.create(newOrder, Order.class);
+        boolean isCreated = serviceDto.create(newOrder);
         System.out.println("Order created: " + isCreated);
 
         // 2. Пошук замовлення за ID
@@ -96,7 +96,7 @@ public class Demo {
                 "Shevchenko",
                 "oleksandr.shevchenko@example.com",
                 "+380991234567");
-        boolean isCreated = serviceDto.create(newCustomer, Customer.class);
+        boolean isCreated = serviceDto.create(newCustomer);
         System.out.println("Customer created: " + isCreated);
 
         // 2. Пошук за ID

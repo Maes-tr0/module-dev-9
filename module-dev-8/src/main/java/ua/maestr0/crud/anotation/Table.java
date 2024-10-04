@@ -1,4 +1,4 @@
-package ua.maestr0.second.anotation;
+package ua.maestr0.crud.anotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Entity {
+public @interface Table {
+    String name() default "";
 }

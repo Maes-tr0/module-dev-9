@@ -1,4 +1,4 @@
-package ua.maestr0.second.config;
+package ua.maestr0.crud.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

@@ -33,6 +33,7 @@ VALUES
     ('Keyboard', 'Mechanical keyboard with RGB backlight', 89.99, 120),
     ('Mouse', 'Wireless ergonomic mouse', 49.99, 180);
 
+
 INSERT INTO orders (order_date, total_amount, status)
 VALUES
     ('2024-10-01 10:30:00', 1499.97, 'Pending'),

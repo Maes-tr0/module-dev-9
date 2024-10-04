@@ -1,12 +1,12 @@
-package ua.maestr0.second.model;
+package ua.maestr0.crud.model;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import ua.maestr0.second.anotation.Column;
-import ua.maestr0.second.anotation.Entity;
-import ua.maestr0.second.anotation.Id;
-import ua.maestr0.second.anotation.Table;
+import ua.maestr0.crud.anotation.Column;
+import ua.maestr0.crud.anotation.Entity;
+import ua.maestr0.crud.anotation.Id;
+import ua.maestr0.crud.anotation.Table;
 
 @Data
 @Entity

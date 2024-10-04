@@ -1,4 +1,4 @@
-package ua.maestr0.second.anotation;
+package ua.maestr0.crud.anotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

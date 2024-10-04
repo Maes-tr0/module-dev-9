@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS products
     stock_quantity INT NOT NULL
 );
 
+
 CREATE TABLE IF NOT EXISTS orders
 (
     id BIGINT PRIMARY KEY DEFAULT nextval('orders_id_seq'),
