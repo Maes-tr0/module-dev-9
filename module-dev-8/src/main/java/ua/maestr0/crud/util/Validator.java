@@ -1,5 +1,6 @@
 package ua.maestr0.crud.util;
 
+import ua.maestr0.crud.anotation.Id;
 import ua.maestr0.crud.model.Customer;
 import ua.maestr0.crud.model.Order;
 import ua.maestr0.crud.model.Product;
@@ -7,6 +8,7 @@ import ua.maestr0.crud.model.Product;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Set;
 
 public class Validator {
@@ -33,24 +35,23 @@ public class Validator {
     }
 
     private static <T> void checkNullFields(T entity) {
-        Field[] fields = entity.getClass().getDeclaredFields();
-
-        for (Field field : fields) {
-            field.setAccessible(true);
-            Object value;
-            try {
-                value = field.get(entity);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("Unable to access field: " + field.getName(), e);
-            }
-
-            if (value == null) {
-                throw new IllegalArgumentException(field.getName() + " cannot be null.");
-            }
-
-            field.setAccessible(false);
-        }
+        Arrays.stream(entity.getClass().getDeclaredFields())
+                .filter(field -> !field.isAnnotationPresent(Id.class))
+                .peek(field -> field.setAccessible(true))
+                .forEach(field -> {
+                    try {
+                        Object value = field.get(entity);
+                        if (value == null) {
+                            throw new IllegalArgumentException(field.getName() + " cannot be null.");
+                        }
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException("Unable to access field: " + field.getName(), e);
+                    } finally {
+                        field.setAccessible(false);
+                    }
+                });
     }
+
 
     private static void validateCustomer(Customer customer) {
         if (!customer.getFirstName().matches(REGEX_FIO)) {
@@ -85,9 +86,6 @@ public class Validator {
         }
         if (order.getTotalAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Total amount must be a positive number.");
-        }
-        if (!VALID_ORDER_STATUSES.contains(order.getStatus())) {
-            throw new IllegalArgumentException("Invalid order status. Allowed values are: " + VALID_ORDER_STATUSES);
         }
     }
 }

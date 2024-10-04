@@ -7,6 +7,10 @@ import ua.maestr0.crud.util.SqlGenerator;
 
 import java.lang.reflect.Field;
 import java.sql.*;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 import static ua.maestr0.crud.util.Validator.validateEntity;
@@ -15,20 +19,51 @@ public class ServiceDto {
     private final SqlGenerator sqlGenerator = new SqlGenerator();
 
     private <T> T mapResultSetToObject(ResultSet resultSet, Class<T> type) {
-        T emptyObject = null;
-        try {
-            emptyObject = type.getConstructor().newInstance();
-            for (Field field : type.getDeclaredFields()) {
-                field.setAccessible(true);
-                field.set(emptyObject, resultSet.getObject(resolveColumnLabel(field)));
-                field.setAccessible(false);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        T emptyObject = createInstance(type);
+        for (Field field : type.getDeclaredFields()) {
+            setFieldValueFromResultSet(emptyObject, field, resultSet);
         }
-
         return emptyObject;
     }
+
+    private <T> T createInstance(Class<T> type) {
+        try {
+            return type.getConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Не вдалось створити екземпляр класу " + type.getName(), e);
+        }
+    }
+
+    private void setFieldValueFromResultSet(Object object, Field field, ResultSet resultSet) {
+        field.setAccessible(true);
+        try {
+            Object value = getFieldValueFromResultSet(resultSet, field);
+            field.set(object, value);
+        } catch (Exception e) {
+            throw new RuntimeException("Не вдалось встановити значення поля " + field.getName(), e);
+        } finally {
+            field.setAccessible(false);
+        }
+    }
+
+    private Object getFieldValueFromResultSet(ResultSet resultSet, Field field) throws SQLException {
+        String columnLabel = resolveColumnLabel(field);
+        Class<?> fieldType = field.getType();
+
+        if (fieldType.equals(LocalDateTime.class)) {
+            Timestamp timestamp = resultSet.getTimestamp(columnLabel);
+            return timestamp != null ? timestamp.toLocalDateTime() : null;
+        } else if (fieldType.equals(LocalDate.class)) {
+            Date date = resultSet.getDate(columnLabel);
+            return date != null ? date.toLocalDate() : null;
+        } else if (fieldType.equals(LocalTime.class)) {
+            Time time = resultSet.getTime(columnLabel);
+            return time != null ? time.toLocalTime() : null;
+        } else {
+            return resultSet.getObject(columnLabel);
+        }
+    }
+
 
     private String resolveColumnLabel(Field field) {
         return Optional.ofNullable(field.getAnnotation(Column.class))

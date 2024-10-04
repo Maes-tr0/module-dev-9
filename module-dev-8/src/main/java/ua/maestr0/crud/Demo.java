@@ -15,9 +15,9 @@ public class Demo {
     public static void main(String[] args) {
         ServiceDto serviceDto = new ServiceDto();
 
-        //customerServiceDTOTest(serviceDto);
-        //orderServiceDTOTest(serviceDto);
-        //productServiceDTOTest(serviceDto);
+        customerServiceDTOTest(serviceDto);
+        orderServiceDTOTest(serviceDto);
+        productServiceDTOTest(serviceDto);
     }
 
     private static void productServiceDTOTest(ServiceDto serviceDto) {
